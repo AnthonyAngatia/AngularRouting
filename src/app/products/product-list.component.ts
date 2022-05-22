@@ -2,6 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Product } from './product';
 import { ProductService } from './product.service';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   templateUrl: './product-list.component.html',
@@ -26,9 +27,12 @@ export class ProductListComponent implements OnInit {
   filteredProducts: Product[] = [];
   products: Product[] = [];
 
-  constructor(private productService: ProductService) { }
+  constructor(private productService: ProductService, private route: ActivatedRoute) { }
 
   ngOnInit(): void {
+    this.listFilter = this.route.snapshot.paramMap.get('listFilter') || '';
+    this.showImage = this.route.snapshot.paramMap.get('showImage') === "true";//If the showImage property is tue then the string will be set to true
+
     this.productService.getProducts().subscribe({
       next: products => {
         this.products = products;

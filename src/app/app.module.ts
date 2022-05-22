@@ -24,7 +24,7 @@ import {AppRoutingModule} from "./app-routing.module";
     ProductModule,
     UserModule,
     MessageModule,
-    AppRoutingModule
+    AppRoutingModule //Ensure it is the last module because the order of routing paths matters. Product and use rmodule have routes
   ],
   declarations: [
     AppComponent,

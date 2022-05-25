@@ -1,24 +1,26 @@
 import {Component, OnInit} from '@angular/core';
 
-import { MessageService } from '../../messages/message.service';
+import {MessageService} from '../../messages/message.service';
 
 import {Product, ProductResolved} from '../product';
-import { ProductService } from '../product.service';
+import {ProductService} from '../product.service';
 import {ActivatedRoute} from "@angular/router";
 
 @Component({
   templateUrl: './product-edit.component.html',
   styleUrls: ['./product-edit.component.css']
 })
-export class ProductEditComponent implements OnInit{
+export class ProductEditComponent implements OnInit {
   pageTitle = 'Product Edit';
   errorMessage: string;
 
   product: Product;
+  private dataIsValid: { [key: string]: boolean } = {}
 
   constructor(private productService: ProductService,
               private messageService: MessageService,
-              private route: ActivatedRoute) { }
+              private route: ActivatedRoute) {
+  }
 
   ngOnInit(): void {
     // this.route.paramMap.subscribe(
@@ -28,11 +30,11 @@ export class ProductEditComponent implements OnInit{
     //
     //   }
     // )
-    this.route.data.subscribe(data=>{
-        const resolvedData:ProductResolved = data['resolvedData'];
-        this.errorMessage = resolvedData.error;
-        this.onProductRetrieved(resolvedData.product)
-      })
+    this.route.data.subscribe(data => {
+      const resolvedData: ProductResolved = data['resolvedData'];
+      this.errorMessage = resolvedData.error;
+      this.onProductRetrieved(resolvedData.product)
+    })
   }
 
   getProduct(id: number): void {
@@ -94,5 +96,38 @@ export class ProductEditComponent implements OnInit{
     }
 
     // Navigate back to the product list
+  }
+  isValid(path?: String): boolean{
+    this.validate()
+    if(path){
+      return this.dataIsValid[path]
+    }
+    //Checks every entry inin the data structure and returns true only if the validation is true
+    return (this.dataIsValid &&
+    Object.keys(this.dataIsValid).every(d=>this.dataIsValid[d] === true))
+
+  }
+
+  validate() {
+    //  Clear the validation object
+    this.dataIsValid = {}
+  //  'info' tab
+    if(this.product.productName &&
+    this.product.productName.length >= 3 &&
+    this.product.productCode){
+      this.dataIsValid['info'] = true
+    }else{
+      this.dataIsValid['info'] = false
+    }
+
+    //'tags' tab
+    if(this.product.category &&
+    this.product.category.length >= 3){
+      this.dataIsValid['tags'] = true
+    }else{
+      this.dataIsValid['tags'] = false
+
+    }
+
   }
 }

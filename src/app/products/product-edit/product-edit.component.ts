@@ -97,7 +97,7 @@ export class ProductEditComponent implements OnInit {
 
     // Navigate back to the product list
   }
-  isValid(path?: String): boolean{
+  isValid(path?: string): boolean{
     this.validate()
     if(path){
       return this.dataIsValid[path]

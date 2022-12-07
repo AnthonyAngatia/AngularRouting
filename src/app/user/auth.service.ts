@@ -8,9 +8,10 @@ import { MessageService } from '../messages/message.service';
 })
 export class AuthService {
   currentUser: User;
+  redirectUrl: string;
 
   get isLoggedIn(): boolean {
-    return !!this.currentUser;
+    return !!this.currentUser; // Returns false if the object is null or undefined
   }
 
   constructor(private messageService: MessageService) { }

@@ -4,7 +4,7 @@ import {MessageService} from '../../messages/message.service';
 
 import {Product, ProductResolved} from '../product';
 import {ProductService} from '../product.service';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   templateUrl: './product-edit.component.html',
@@ -14,8 +14,24 @@ export class ProductEditComponent implements OnInit {
   pageTitle = 'Product Edit';
   errorMessage: string;
 
-  product: Product;
-  private dataIsValid: { [key: string]: boolean } = {}
+  // product: Product;
+  private dataIsValid: { [key: string]: boolean } = {};
+
+  get isDirty(): boolean {
+    return JSON.stringify(this.originalProduct) !== JSON.stringify(this.currentProduct);
+  }
+
+  private currentProduct: Product;
+  private originalProduct: Product;
+
+  get product(): Product {
+    return this.currentProduct;
+  }
+  set product(value){
+    this.currentProduct = value;
+    // Clone the object to retain the copy
+    this.originalProduct = {...value};
+  }
 
   constructor(private productService: ProductService,
               private messageService: MessageService,
@@ -33,8 +49,8 @@ export class ProductEditComponent implements OnInit {
     this.route.data.subscribe(data => {
       const resolvedData: ProductResolved = data['resolvedData'];
       this.errorMessage = resolvedData.error;
-      this.onProductRetrieved(resolvedData.product)
-    })
+      this.onProductRetrieved(resolvedData.product);
+    });
   }
 
   getProduct(id: number): void {
@@ -72,6 +88,12 @@ export class ProductEditComponent implements OnInit {
     }
   }
 
+  reset(): void{
+    this.dataIsValid = null;
+    this.currentProduct = null;
+    this.originalProduct = null;
+  }
+
   saveProduct(): void {
     if (true === true) {
       if (this.product.id === 0) {
@@ -94,38 +116,40 @@ export class ProductEditComponent implements OnInit {
     if (message) {
       this.messageService.addMessage(message);
     }
+    this.reset();
 
     // Navigate back to the product list
   }
-  isValid(path?: string): boolean{
-    this.validate()
-    if(path){
-      return this.dataIsValid[path]
+
+  isValid(path?: string): boolean {
+    this.validate();
+    if (path) {
+      return this.dataIsValid[path];
     }
-    //Checks every entry inin the data structure and returns true only if the validation is true
+    // Checks every entry inin the data structure and returns true only if the validation is true
     return (this.dataIsValid &&
-    Object.keys(this.dataIsValid).every(d=>this.dataIsValid[d] === true))
+      Object.keys(this.dataIsValid).every(d => this.dataIsValid[d] === true));
 
   }
 
   validate() {
     //  Clear the validation object
-    this.dataIsValid = {}
-  //  'info' tab
-    if(this.product.productName &&
-    this.product.productName.length >= 3 &&
-    this.product.productCode){
-      this.dataIsValid['info'] = true
-    }else{
-      this.dataIsValid['info'] = false
+    this.dataIsValid = {};
+    //  'info' tab
+    if (this.product.productName &&
+      this.product.productName.length >= 3 &&
+      this.product.productCode) {
+      this.dataIsValid['info'] = true;
+    } else {
+      this.dataIsValid['info'] = false;
     }
 
-    //'tags' tab
-    if(this.product.category &&
-    this.product.category.length >= 3){
-      this.dataIsValid['tags'] = true
-    }else{
-      this.dataIsValid['tags'] = false
+    // 'tags' tab
+    if (this.product.category &&
+      this.product.category.length >= 3) {
+      this.dataIsValid['tags'] = true;
+    } else {
+      this.dataIsValid['tags'] = false;
 
     }
 

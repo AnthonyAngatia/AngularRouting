@@ -2,7 +2,7 @@ import { Component, OnInit } from '@angular/core';
 
 import { Product } from './product';
 import { ProductService } from './product.service';
-import {ActivatedRoute} from "@angular/router";
+import {ActivatedRoute} from '@angular/router';
 
 @Component({
   templateUrl: './product-list.component.html',
@@ -31,7 +31,7 @@ export class ProductListComponent implements OnInit {
 
   ngOnInit(): void {
     this.listFilter = this.route.snapshot.paramMap.get('listFilter') || '';
-    this.showImage = this.route.snapshot.paramMap.get('showImage') === "true";//If the showImage property is tue then the string will be set to true
+    this.showImage = this.route.snapshot.paramMap.get('showImage') === 'true'; // If the showImage property is tue then the string will be set to true
 
     this.productService.getProducts().subscribe({
       next: products => {

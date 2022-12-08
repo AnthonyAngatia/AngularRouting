@@ -23,7 +23,6 @@ import {BrowserAnimationsModule} from "@angular/platform-browser/animations";
     HttpClientModule,
     BrowserAnimationsModule,
     InMemoryWebApiModule.forRoot(ProductData, {delay: 1000}),
-    ProductModule,
     UserModule,
     MessageModule,
     AppRoutingModule // Ensure it is the last module because the order of routing paths matters. Product and user module have routes
